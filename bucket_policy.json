@@ -1,0 +1,56 @@
+{
+    "Statement": [
+        {
+            "Sid": "web",
+            "Effect": "Allow",
+            "Principal": {
+                "ID": [
+                    "*"
+                ]
+            },
+            "Action": [
+                "Get*",
+                "Put*",
+                "List*",
+                "ListBucket",
+                "HeadBucket",
+                "GetBucketLocation",
+                "GetBucketCORS",
+                "GetObject",
+                "GetObjectVersionAcl"
+            ],
+            "Resource": [
+                "{bucket_name}",
+                "{bucket_name}/*"
+            ]
+        },
+		{
+            "Sid": "image",
+            "Effect": "Allow",
+            "Principal": {
+                "ID": [
+                    "*"
+                ]
+            },
+            "Action": [
+                "Put*",
+                "PutObject"
+            ],
+            "Resource": [
+                "{bucket_name}/*.jpg",
+                "{bucket_name}/*.html",
+                "{bucket_name}/*.js",
+                "{bucket_name}/*.png",
+                "{bucket_name}/*.txt",
+                "{bucket_name}/*.svg",
+                "{bucket_name}/*.ico",
+                "{bucket_name}/*.otf",
+                "{bucket_name}/*.eot",
+                "{bucket_name}/*.ttf",
+                "{bucket_name}/*.woff*",
+                "{bucket_name}/*.xml",
+                "{bucket_name}/*.css"
+            ]
+        }
+    ]
+}
