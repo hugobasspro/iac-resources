@@ -1,0 +1,13 @@
+FROM python:3.7.9
+ARG bucket_name="bucket1"
+ARG region="la-north-2"
+ARG ak=""
+ARG sk=""
+
+WORKDIR /app
+COPY . /app
+
+RUN pip3 install -i https://repo.huaweicloud.com/repository/pypi/simple -r requirements.txt
+
+RUN python3 create-bucket.py ${bucket_name} ${ak} ${sk} ${region}
+#SCMD ["python3", "obs-test.py"]

@@ -1,0 +1,16 @@
+FROM python:3.7.9
+ARG domain_name="domain.com"
+ARG bucket_folder="test"
+ARG bucket_name="bucket1"
+ARG region="la-north-2"
+ARG ssl_certificate_name="cert1"
+ARG ak=""
+ARG sk=""
+
+WORKDIR /app
+COPY . /app
+
+RUN pip3 install -i https://repo.huaweicloud.com/repository/pypi/simple -r requirements.txt
+
+RUN python create-cdn.py ${domain_name} ${bucket_folder} ${ak} ${sk} ${region} ${bucket_name} ${ssl_certificate_name}
+#CMD ["python3", "obs-test.py"]

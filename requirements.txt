@@ -1,0 +1,13 @@
+huaweicloudsdkcore
+huaweicloudsdkecs
+huaweicloudsdkcdn
+huaweicloudsdkims
+huaweicloudsdkvpc
+huaweicloudsdkas
+huaweicloudsdkobs
+huaweicloudsdkevs
+huaweicloudsdkscm
+huaweicloudsdkcodeartsbuild
+huaweicloudsdkcodeartspipeline
+esdk-obs-python
+pymongo

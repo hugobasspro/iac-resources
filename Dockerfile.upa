@@ -1,0 +1,14 @@
+FROM python:3.7.9
+ARG bucket_name="bucket1"
+ARG region="la-north-2"
+ARG ak=""
+ARG sk=""
+ARG folder=""
+
+WORKDIR /app
+COPY . /app
+
+RUN pip3 install -i https://repo.huaweicloud.com/repository/pypi/simple -r requirements.txt
+
+RUN python3 obs-upload-assets.py ${bucket_name} ${ak} ${sk} ${region} ${folder}
+#SCMD ["python3", "obs-test.py"]
