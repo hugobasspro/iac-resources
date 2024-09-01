@@ -7,7 +7,7 @@ def set_bucket_acl_to_private_if_needed(obs_client, bucket_name) -> bool:
     Set the bucket ACL to private if it's not already set.
 
     Parameters:
-    obs_client (ObsClient): The OBS client instance.
+    obs_client (ObsClie nt): The OBS client instance.
     bucket_name (str): The name of the bucket to check and update.
 
     Returns:
@@ -67,6 +67,27 @@ def configure_static_web_hosting(obs_client, bucket_name, index_document, error_
         print(f"Exception occurred while configuring bucket '{bucket_name}' for static web hosting: {e}")
         return False
 
+def check_bucket_exists(obs_client, bucket_name) -> bool:
+    """
+    Check if the bucket already exists.
+
+    Parameters:
+    obs_client (ObsClient): The OBS client instance.
+    bucket_name (str): The name of the bucket to check.
+
+    Returns:
+    bool: True if the bucket exists, False otherwise.
+    """
+    try:
+        obs_client.headBucket(bucketName=bucket_name)
+        return True
+    except Exception as e:
+        if "NoSuchBucket" in str(e):
+            return False
+        else:
+            print(f"Exception occurred while checking bucket existence: {e}")
+            return False
+
 def create_bucket(obs_client, bucket_name, region) -> bool:
     """
     Create a new bucket in the OBS account.
@@ -79,8 +100,15 @@ def create_bucket(obs_client, bucket_name, region) -> bool:
     bool: True if the bucket was created successfully, False otherwise.
     """
     try:
+
+        if check_bucket_exists(obs_client, bucket_name):
+            raise Exception(f"Bucket '{bucket_name}' already exists. Skipping creation.")
+
         response = obs_client.createBucket(bucketName=bucket_name, location=region)
         if response.status < 300:
+            if not set_bucket_acl_to_private_if_needed(obs_client, bucket_name):
+                return False
+
             res = is_bucket_private(obs_client, bucket_name)
             print (res)
             with open('bucket_policy.json', 'r') as file:
@@ -96,8 +124,9 @@ def create_bucket(obs_client, bucket_name, region) -> bool:
                 print(f"Error: {e}", file=sys.stderr)
             return True
         else:
-            print(f"Error: Unable to create bucket '{bucket_name}'.", file=sys.stderr)
-
+            print(f"Error: Unable to create bucket '{bucket_name}'. Status code: {response.status}", file=sys.stderr)
+            print('errorCode:', response.errorCode)
+            print('errorMessage:', response.errorMessage)
             return False
     except Exception as e:
         print(f"Exception occurred while creating bucket '{bucket_name}': {e}", file=sys.stderr)
